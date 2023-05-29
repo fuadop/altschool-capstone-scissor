@@ -5,4 +5,5 @@ docker-compose.yml
 .git
 .github
 README.md
+scheme-change-image.png
 
