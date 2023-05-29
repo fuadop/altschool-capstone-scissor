@@ -1,0 +1,174 @@
+basePath: /
+definitions:
+  controller.JSONResponse-any:
+    properties:
+      data: {}
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  controller.JSONResponse-controller_SRes:
+    properties:
+      data:
+        $ref: '#/definitions/controller.SRes'
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  controller.JSONResponse-model_URL:
+    properties:
+      data:
+        $ref: '#/definitions/model.URL'
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  controller.SBody:
+    properties:
+      url:
+        type: string
+    type: object
+  controller.SRes:
+    properties:
+      id:
+        type: string
+      url:
+        description: shortened URL
+        type: string
+    type: object
+  model.URL:
+    properties:
+      clicks:
+        type: integer
+      country_metrics:
+        additionalProperties:
+          type: integer
+        type: object
+      url:
+        type: string
+    type: object
+info:
+  contact:
+    email: fuadolatunji@gmail.com
+    name: Fuad Olatunji
+    url: https://fuadolatunji.me
+  description: Fast minimalist URL shortener
+  title: Scissors
+  version: "1.0"
+paths:
+  /api/analytics/{id}:
+    get:
+      description: Fetch analytics of a shortened URL
+      parameters:
+      - description: The URL ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.JSONResponse-model_URL'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.JSONResponse-any'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.JSONResponse-any'
+      summary: Short URL analytics
+      tags:
+      - api
+  /api/health:
+    get:
+      description: Healty status checker for load balancers and monitoring systems.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.JSONResponse-any'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.JSONResponse-any'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.JSONResponse-any'
+      summary: Healty status checker
+      tags:
+      - api
+  /api/shorten:
+    post:
+      consumes:
+      - application/json
+      description: Shorten a URL
+      parameters:
+      - description: Request body
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/controller.SBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.JSONResponse-controller_SRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.JSONResponse-any'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.JSONResponse-any'
+      summary: Shorten a URL
+      tags:
+      - api
+  /api/unpublish/{id}:
+    delete:
+      description: Unpublish/Delete a shortened URL.
+      parameters:
+      - description: The URL ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.JSONResponse-any'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.JSONResponse-any'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.JSONResponse-any'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.JSONResponse-any'
+      summary: Unpublish/Delete a shortened URL
+      tags:
+      - api
+schemes:
+- http
+- https
+swagger: "2.0"
